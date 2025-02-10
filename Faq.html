@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #chat-container {
+      width: 400px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    #chat-box {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 10px;
+      background-color: #f1f1f1;
+      margin-bottom: 1rem;
+    }
+    .message {
+      margin: 0.5rem 0;
+      display: flex;
+    }
+    .message.bot {
+      justify-content: flex-start;
+    }
+    .message.user {
+      justify-content: flex-end;
+    }
+    .message p {
+      max-width: 70%;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background-color: #007bff;
+      color: white;
+      word-wrap: break-word;
+    }
+    .message.bot p {
+      background-color: #ddd;
+      color: #333;
+    }
+    .question-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: block;
+    }
+    .question-list li {
+      background-color: #007bff;
+      color: white;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .question-list li:hover {
+      background-color: #0056b3;
+    }
+    #action-buttons {
+      margin-top: 1rem;
+      display: none; /* Hidden by default */
+      justify-content: space-between;
+    }
+    button {
+      padding: 0.75rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <h2>FAQ Chatbot</h2>
+    <div id="chat-box">
+      <div class="message bot"><p>Welcome! Please choose a question from the list below:</p></div>
+      <ul id="question-list" class="question-list">
+        <li onclick="handleQuestionClick('What is your return policy?')">What is your return policy?</li>
+        <li onclick="handleQuestionClick('How long does shipping take?')">How long does shipping take?</li>
+        <li onclick="handleQuestionClick('Do you offer customer support?')">Do you offer customer support?</li>
+      </ul>
+    </div>
+    <div id="action-buttons">
+      <button onclick="askAnotherQuestion()">Ask Another Question</button>
+      <button onclick="goToHomepage()">Go to Homepage</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const questionList = document.getElementById("question-list");
+      const actionButtons = document.getElementById("action-buttons");
+      const chatBox = document.getElementById("chat-box");
+
+      const answers = {
+        'What is your return policy?': 'We offer a 30-day return policy on all items. Please ensure that the products are in their original condition.',
+        'How long does shipping take?': 'Shipping typically takes 5-7 business days. International shipping may take longer depending on customs processing.',
+        'Do you offer customer support?': 'Yes, our customer support team is available 24/7 via email and live chat to assist you with any inquiries.'
+      };
+
+      // Handle question click
+      window.handleQuestionClick = (question) => {
+        // Hide the question list
+        questionList.style.display = 'none';
+
+        // Display user's selected question
+        const userMessage = document.createElement('div');
+        userMessage.classList.add('message', 'user');
+        userMessage.innerHTML = `<p>${question}</p>`;
+        chatBox.appendChild(userMessage);
+
+        // Display bot's answer after a short delay
+        setTimeout(() => {
+          const botMessage = document.createElement('div');
+          botMessage.classList.add('message', 'bot');
+          botMessage.innerHTML = `<p>${answers[question] || 'Sorry, I do not have an answer to that question.'}</p>`;
+          chatBox.appendChild(botMessage);
+
+          // Ask the user what to do next
+          const nextStepMessage = document.createElement('div');
+          nextStepMessage.classList.add('message', 'bot');
+          nextStepMessage.innerHTML = `<p>What would you like to do next?</p>`;
+          chatBox.appendChild(nextStepMessage);
+
+          // Show action buttons
+          actionButtons.style.display = 'flex';
+          chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+        }, 500);
+      };
+
+      // Ask another question
+      window.askAnotherQuestion = () => {
+        // Clear the chat box except the welcome message
+        chatBox.innerHTML = '<div class="message bot"><p>Welcome! Please choose a question from the list below:</p></div>';
+
+        // Show the question list again
+        questionList.style.display = 'block';
+
+        // Hide the action buttons
+        actionButtons.style.display = 'none';
+      };
+
+      // Go to homepage
+      window.goToHomepage = () => {
+        alert("Redirecting to homepage...");
+        // Replace with actual homepage redirection if needed
+        window.location.href = "index.html";
+      };
+    });
+  </script>
+</body>
+</html>
